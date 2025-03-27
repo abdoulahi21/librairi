@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Category;
+use App\Models\Categorie;
 use Illuminate\Http\Request;
 
 class CategoryController extends Controller
@@ -13,8 +13,8 @@ class CategoryController extends Controller
     public function index()
     {
         //
-       // $categories = Category::all();
-        return view('categories.index');
+        $categories = Categorie::all();
+        return view('categories.index', compact('categories'));
     }
 
     /**
@@ -35,7 +35,7 @@ class CategoryController extends Controller
         $request->validate([
             'libelle' => 'required',
         ]);
-        $category=Category::create([
+        $category=Categorie::create([
             'libelle'=>$request->libelle
         ]);
         return redirect()->route('categories.index', $category);
