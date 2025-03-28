@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -82,4 +83,5 @@ class LoginRequest extends FormRequest
     {
         return Str::transliterate(Str::lower($this->string('email')).'|'.$this->ip());
     }
+
 }

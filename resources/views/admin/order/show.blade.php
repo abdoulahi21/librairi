@@ -11,6 +11,7 @@
             <div class="card-body">
                 <h6><strong>Client :</strong> {{ $order->user->name }} ({{ $order->user->email }})</h6>
                 <h6><strong>Date de commande :</strong> {{ $order->created_at->format('d/m/Y H:i') }}</h6>
+                <h6><strong>Date Payment  :</strong> {{ $order->payment ? $order->payment->paid_at->format('d/m/Y H:i') : 'Non payé' }}</h6>
 
                 <div class="mt-3">
                     <h6><strong>Statut :</strong></h6>

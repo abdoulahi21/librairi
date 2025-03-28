@@ -8,12 +8,19 @@
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <h5 class="fw-bold">Statut :
-                        <span class="badge {{ $order->status == 'en attente' ? 'text-bg-warning' : '' }}
-                            {{ $order->status == 'en préparation' ? 'text-bg-primary' : '' }}
-                            {{ $order->status == 'expédiée' ? 'text-bg-success' : '' }}
-                            {{ $order->status == 'payée' ? 'text-bg-secondary' : '' }}">
-                            {{ ucfirst($order->status) }}
-                        </span>
+                        @php
+                            $statusClasses = [
+                                'en attente' => 'bg-warning',
+                                'payée' => 'bg-success',
+                                'expédiée' => 'bg-primary',
+                                'en préparation' => 'bg-info',
+                                'Annulée' => 'bg-danger'
+                            ];
+                        @endphp
+
+                        <span class="badge {{ $statusClasses[$order->status] ?? 'bg-warning' }}">
+                           {{ $order->status }}
+                            </span>
                     </h5>
                     <h5 class="text-primary fw-bold">Total : {{ number_format($order->total_price, 2, ',', ' ') }} €</h5>
                 </div>
@@ -41,13 +48,7 @@
                 </ul>
 
                 <div class="mt-4 text-end">
-                    @if($order->status == 'En attente')
-                        <form action="{{ route('orders.cancel', $order->id) }}" method="POST" onsubmit="return confirm('Voulez-vous vraiment annuler cette commande ?');">
-                            @csrf
-                            @method('POST')
-                            <button type="submit" class="btn btn-danger">❌ Annuler la commande</button>
-                        </form>
-                    @endif
+
                 </div>
             </div>
         </div>

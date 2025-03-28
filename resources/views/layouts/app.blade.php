@@ -31,6 +31,17 @@
             <!-- Page Content -->
             <main>
                 {{ $slot }}
+                <!-- Icône du panier flottante en bas à droite -->
+                @can('is-client')
+                <li class="nav-item position-fixed bottom-10 end-10 m-5">
+                    <a href="{{ route('cart.index') }}" class="nav-link position-relative bg-light shadow p-2 rounded-circle">
+                        🛒
+                        <span class="badge bg-danger position-absolute top-0 start-100 translate-middle">
+                         {{ session('cart') ? count(session('cart')) : 0 }}
+                       </span>
+                    </a>
+                </li>
+                @endcan
             </main>
         </div>
     </body>

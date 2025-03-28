@@ -6,6 +6,7 @@ use App\Mail\OrderShipped;
 use App\Models\Book;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -33,33 +34,68 @@ class OrderController extends Controller
     public function create()
     {
         $cart = session()->get('cart', []);
+
         if (empty($cart)) {
             return redirect()->route('cart.index')->with('error', 'Votre panier est vide.');
         }
 
+        // Vérifier le stock avant de valider la commande
+        foreach ($cart as $id => $item) {
+            $book = Book::find($id);
+
+            if (!$book) {
+                return redirect()->route('cart.index')->with('error', "Le livre {$item['title']} n'existe plus.");
+            }
+
+            if ($book->stock < $item['quantity']) {
+                return redirect()->route('cart.index')->with('error', "Stock insuffisant pour {$book->title} (Disponible : {$book->stock}).");
+            }
+        }
+
         // Créer la commande
-        $orders = Order::create([
+        $order = Order::create([
             'user_id' => auth()->id(),
             'total_price' => collect($cart)->sum(fn($item) => $item['price'] * $item['quantity']),
-            //'status' => 'En attente',
+            'status' => 'En attente',
         ]);
 
         foreach ($cart as $id => $item) {
+            $book = Book::find($id);
+
+            // Créer les items de la commande
             OrderItem::create([
-                'order_id' => $orders->id,
+                'order_id' => $order->id,
                 'book_id' => $id,
                 'quantity' => $item['quantity'],
                 'price' => $item['price'],
             ]);
+
+            // Réduire le stock après validation de la commande
+            $book->decrement('stock', $item['quantity']);
         }
 
+        // Vider le panier après commande
         session()->forget('cart');
-        return redirect()->route('orders.index',compact('orders'))->with('success', 'Commande passée avec succès !');
+
+        return redirect()->route('orders.index')->with('success', 'Commande passée avec succès !');
     }
+
 
     public function payée(string $orderId)
     {
         $orders = Order::find($orderId);
+
+        if (!$orders) {
+            return redirect()->route('orders.index')->with('error', 'Commande introuvable.');
+        }
+
+        // Enregistrer le paiement dans la table payments
+        Payment::create([
+            'order_id' => $orders->id,
+            'amount' => $orders->total_price,
+            'paid_at' => now(),
+            // Statut du paiement
+        ]);
         // Mettre à jour le statut de la commande
         $orders->status ='payée';
         $orders->save();

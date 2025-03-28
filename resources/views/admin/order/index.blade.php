@@ -24,7 +24,7 @@
                         <td class="fw-bold text-primary">{{ number_format($order->total_price, 2, ',', ' ') }} €</td>
                         <td>
                             @if($order->status == 'en attente' )
-                                <a href="{{ route('orders.payée', $order->id) }}" class="badge text-bg-warning">Payer</a
+                                <a href="{{ route('orders.payée', $order->id) }}" class="badge text-bg-warning">En attente de payement</a
                             @endif
                             @if($order->status == 'payée' )
                                 <a href="{{ route('orders.preparation', $order->id) }}" class="badge text-bg-secondary">En préparation</a

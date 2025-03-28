@@ -16,10 +16,10 @@
                             <h5 class="fw-bold">Commande #{{ $order->id }}</h5>
                             @php
                                 $statusClasses = [
-                                    'En attente' => 'bg-warning',
-                                    'Payée' => 'bg-success',
-                                    'Expédiée' => 'bg-primary',
-                                    'En préparation' => 'bg-info',
+                                    'en attente' => 'bg-warning',
+                                    'payée' => 'bg-success',
+                                    'expédiée' => 'bg-primary',
+                                    'en préparation' => 'bg-info',
                                     'Annulée' => 'bg-danger'
                                 ];
                             @endphp

@@ -1,10 +1,10 @@
 <x-app-layout>
     <x-slot name="header">
         <div>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            <h2 class="text-center text-2xl font-semibold">
                 {{ __('Categories') }}
         </div>
-        </h2>  <a href="{{route('categories.create')}}" class="btn btn-primary">Ajouter un catègories</a>
+        </h2>  <a href="{{route('categories.create')}}" class="btn btn-outline-primary">Ajouter un catègories</a>
     </x-slot>
     <div class="container mt-5 col-md-5">
         <div class="card">

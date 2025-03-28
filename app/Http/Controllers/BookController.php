@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Categorie;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -46,7 +47,8 @@ class BookController extends Controller
 
             return view('admin.book.index', compact('books', 'categories'));
         }else {
-            $query = Book::query();
+
+            $query = Book::where('status', 'desarchiver');
 
             // Filtrer par prix minimum
             if ($request->filled('min_price')) {
@@ -179,6 +181,22 @@ class BookController extends Controller
         return redirect()->route('books.index')->with('success', 'Livre mis à jour avec succès.');
     }
 
+    public function archiver(string $orderId)
+    {
+        $books = Book::find($orderId);
+        // Mettre à jour le statut de la commande
+        $books->status ='archiver';
+        $books->save();
+        return redirect()->route('books.index',$books)->with('success', 'Statut mis à jour avec succès.');
+    }
+    public function desarchiver(string $orderId)
+    {
+        $books = Book::find($orderId);
+        // Mettre à jour le statut de la commande
+        $books->status ='desarchiver';
+        $books->save();
+        return redirect()->route('books.index',$books)->with('success', 'Statut mis à jour avec succès.');
+    }
 
     /**
      * Remove the specified resource from storage.

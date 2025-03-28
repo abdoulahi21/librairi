@@ -81,6 +81,12 @@
                         <td>
                             <a href="{{ route('books.edit', $book->id) }}" class="btn btn-sm btn-warning">Modifier</a>
                             <a href="{{ route('books.show', $book->id) }}" class="btn btn-sm btn-secondary">Details</a>
+                            @if($book->status=='desarchiver')
+                                <a href="{{ route('books.archiver', $book->id) }}" class="btn btn-sm btn-info">Archiver</a>
+                            @endif
+                            @if($book->status=='archiver')
+                                <a href="{{ route('books.desarchiver', $book->id) }}" class="btn btn-sm btn-info">Désarchiver</a>
+                            @endif
                             <form action="{{ route('books.destroy', $book->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Voulez-vous vraiment supprimer ce livre ?');">
                                 @csrf
                                 @method('DELETE')
